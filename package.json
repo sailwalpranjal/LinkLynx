@@ -1,0 +1,15 @@
+{
+  "name": "linklynx",
+  "version": "1.0.0",
+  "description": "LinkLynx is a web crawler designed to analyze and map the connectivity between web pages.",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
