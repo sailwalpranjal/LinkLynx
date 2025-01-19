@@ -1,12 +1,44 @@
+const { JSDOM } = require('jsdom');
+
+function getURLsFromHTML(htmlBody, baseURL) {
+    const urls = [];
+    const dom = new JSDOM(htmlBody);
+    const linkElements = dom.window.document.querySelectorAll('a');
+
+    // Loop through all <a> elements
+    for (const linkElement of linkElements) {
+        const href = linkElement.href;
+
+        try {
+            if (href.startsWith('/')) {
+                // Resolve relative URL by combining with the baseURL
+                const urlObj = new URL(href, baseURL);  // Use baseURL to resolve relative URLs
+                urls.push(urlObj.href);
+            } else {
+                // For absolute URLs, just push the href as is
+                const urlObj = new URL(href);  // Directly use the absolute URL
+                urls.push(urlObj.href);
+            }
+        } catch (err) {
+            console.log(`Error processing URL: ${href} - ${err.message}`);
+        }
+    }
+
+    return urls;
+}
+
 function normalizeURL(urlString) {
-    const urlObj = new URL(urlString); // Ensure you're using the correct variable name `urlString` here
-    const hostPath = `${urlObj.hostname}${urlObj.pathname}`; // Use backticks for string interpolation
+    const urlObj = new URL(urlString); // Create a URL object
+    const hostPath = `${urlObj.hostname}${urlObj.pathname}`; // Get the host and path
+
+    // Remove the trailing slash if present
     if (hostPath.length > 0 && hostPath.slice(-1) === '/') {
-        return hostPath.slice(0, -1); // Remove the trailing slash if present
+        return hostPath.slice(0, -1);
     }
     return hostPath;
 }
 
 module.exports = {
-    normalizeURL
+    normalizeURL,
+    getURLsFromHTML
 };
